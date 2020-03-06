@@ -11,8 +11,9 @@
                 pushSocket.onmessage = function (event) {
                 console.log(event.data);
                 newData = event.data;
-                // window.print(event.data);
-                dollarAdd(event.data);
+                if(newData.includes("#")){
+                    dollarAdd(event.data);
+                }
                 //do ui update here
                 }
 
@@ -33,17 +34,25 @@
                     var d = new Date();
                     $("#myTable tbody").prepend(
                         "<tr>" +
-                            "<td>"+newData+"</td>" +
+                            "<td id='"+rowCounter+"'"+">"+newData+"</td>" +
                             "<td>"+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"</td>" +
-                            "<td>"+rowCounter+"</td>" +
+                            "<td>"+1+"</td>" +
                         "</tr>"
                     );
+                    var myTable = document.getElementById("myTable");
+                    for(var i=2 ;i< $('#myTable tr').length ;i++){
+                        myTable.rows[i].cells[2].innerHTML = i;
+                        if(myTable.rows[i].cells[2].innerHTML == 11){
+                            document.getElementById("myTable").deleteRow(myTable.rows[i].cells[2].innerHTML);
+                        }
                     }
+                }
     
             </script>
         
     </head>
     <body>
+            <p id="demo"></p>
             <table class="table table-striped" id="myTable">
                     <thead class="grey">
                         <tr>
