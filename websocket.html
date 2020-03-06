@@ -23,15 +23,19 @@
 
                 pushSocket.onclose = function (event) {
                 //send empty message to initialize socket connnection
-                alert("Socket Closed by Server");
+                //alert("Socket Closed by Server");
                 };
+                var d = new Date();
+                var rowCounter = 0;
 
                 function dollarAdd() {
-                    $("#myTable tbody").append(
+                    rowCounter +=1;
+                    var d = new Date();
+                    $("#myTable tbody").prepend(
                         "<tr>" +
                             "<td>"+newData+"</td>" +
-                            "<td>6/11/2015</td>" +
-                            "<td>www.pluralsight.com</td>" +
+                            "<td>"+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"</td>" +
+                            "<td>"+rowCounter+"</td>" +
                         "</tr>"
                     );
                     }
