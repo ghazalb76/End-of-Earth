@@ -10,15 +10,14 @@
                 var pushSocket = new WebSocket("ws://localhost:8080")
                 var newData;
                 pushSocket.onmessage = function (event) {
-                console.log(event.data);
-                // newData = event.data;
-                // if(newData.includes("#")){
-                //     var time = dollarAdd();
-                //     meanCount(time);
-                // }
-                // else{
-                //     document.getElementById("mean").innerHTML = "داده کافی وجود ندارد";
-                // }
+                    newData = event.data;
+                    if(newData.includes("#")){
+                        var time = dollarAdd();
+                        meanCount(time);
+                    }
+                    else{
+                        document.getElementById("mean").innerHTML = "داده کافی وجود ندارد";
+                    }
                 }
 
                 pushSocket.onopen = function (event) {
@@ -32,6 +31,9 @@
                 };
                 var d = new Date();
                 var rowCounter = 0;
+                let map = new Map();
+                var h,m,s,h1,m1,s1,h2,m2,s2;
+                var sum = 0;
 
                 function dollarAdd() {
                     rowCounter +=1;
@@ -53,32 +55,20 @@
                     }
                     return time;
                 }
-                let map = new Map();
-                var h,m,s,h1,m1,s1,h2,m2,s2;
+
                 function meanCount(time){
                     map.set(newData, time);
+                    sum += parseInt(newData);
                     time = time.split(":");
                     s1 = parseInt(time.pop());
                     m1 = parseInt(time.pop());
                     h1 = parseInt(time.pop());
-                    console.log(map);
-                    map.forEach(ah);
-
-                    for (var obj in map){
-                        console.log(obj);
-                        // console.log(dict[obj]);
-
-                        
-                    }
-                    fff = 0;
-                    map.forEach(calMean);
-                    document.getElementById("mean").innerHTML = fff;
-                    // alert(fff);
-
-            
-
+                    map.forEach(timeDiffer);
+                    var temp = (sum/map.size);
+                    document.getElementById("mean").innerHTML = temp.toString()+"#";
                 }
-                function ah(value, key, map){
+
+                function timeDiffer(value, key, map){
                     var t =  value.split(":");
                     s2 = parseInt(t.pop());
                     m2 = parseInt(t.pop());
@@ -86,27 +76,22 @@
                     h = Math.abs(h1-h2);
                     m = Math.abs(m1-m2);
                     s = Math.abs(s1-s2);
-                    console.log(h1,":",m1,":",s1,"  ",h2,":",m2,":",s2,"  ",h,":",m,":",s);
                     
                     if((h==0 && m==0) || (h==0 && m==1 && s<60) || (h==1 && m<60)){
                         console.log(value); 
                     }
                     else{
                         map.delete(key);
+                        sum -= parseInt(key);
                     }
-                }
-                var fff = 0;
-                function calMean(value, key, map){
-                    fff += parseInt(key);
                 }
     
             </script>
         
     </head>
     <body>
-        <p id="demo">میانگین ۱ دقیقه آخر: </p>
-        <p id="mean"></p>
-
+        <p id="demo" style="margin: 1% 45%;"> :میانگین ۱ دقیقه آخر  </p>
+        <p id="mean" style="margin: -2.2% 36%;"></p>
         <table class="table table-striped" id="myTable">
             <thead class="grey">
                 <tr>
@@ -119,12 +104,4 @@
             </tbody>
         </table>    
     </body>
-
 </html>
-<!-- // alert(sum);
-// var sum = 0;
-// for(var i=1 ;i< $('#myTable tr').length ;i++){
-//     var t = myTable.rows[i].cells[0].innerHTML.substring(0, myTable.rows[i].cells[0].innerHTML.length - 1);
-//     sum += parseInt(t);
-// }
-// document.getElementById("mean").innerHTML = sum / ; -->
