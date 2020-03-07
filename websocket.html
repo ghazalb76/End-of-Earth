@@ -5,16 +5,20 @@
         <style>
         </style>
             <script >
+                var dict = {};
 
                 var pushSocket = new WebSocket("ws://localhost:8080")
                 var newData;
                 pushSocket.onmessage = function (event) {
                 console.log(event.data);
-                newData = event.data;
-                if(newData.includes("#")){
-                    dollarAdd(event.data);
-                }
-                //do ui update here
+                // newData = event.data;
+                // if(newData.includes("#")){
+                //     var time = dollarAdd();
+                //     meanCount(time);
+                // }
+                // else{
+                //     document.getElementById("mean").innerHTML = "داده کافی وجود ندارد";
+                // }
                 }
 
                 pushSocket.onopen = function (event) {
@@ -32,39 +36,95 @@
                 function dollarAdd() {
                     rowCounter +=1;
                     var d = new Date();
+                    var time = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
                     $("#myTable tbody").prepend(
                         "<tr>" +
                             "<td id='"+rowCounter+"'"+">"+newData+"</td>" +
-                            "<td>"+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"</td>" +
+                            "<td>"+time+"</td>" +
                             "<td>"+1+"</td>" +
                         "</tr>"
                     );
                     var myTable = document.getElementById("myTable");
                     for(var i=2 ;i< $('#myTable tr').length ;i++){
                         myTable.rows[i].cells[2].innerHTML = i;
-                        if(myTable.rows[i].cells[2].innerHTML == 11){
+                        if(myTable.rows[i].cells[2].innerHTML == 61){
                             document.getElementById("myTable").deleteRow(myTable.rows[i].cells[2].innerHTML);
                         }
                     }
+                    return time;
+                }
+                let map = new Map();
+                var h,m,s,h1,m1,s1,h2,m2,s2;
+                function meanCount(time){
+                    map.set(newData, time);
+                    time = time.split(":");
+                    s1 = parseInt(time.pop());
+                    m1 = parseInt(time.pop());
+                    h1 = parseInt(time.pop());
+                    console.log(map);
+                    map.forEach(ah);
+
+                    for (var obj in map){
+                        console.log(obj);
+                        // console.log(dict[obj]);
+
+                        
+                    }
+                    fff = 0;
+                    map.forEach(calMean);
+                    document.getElementById("mean").innerHTML = fff;
+                    // alert(fff);
+
+            
+
+                }
+                function ah(value, key, map){
+                    var t =  value.split(":");
+                    s2 = parseInt(t.pop());
+                    m2 = parseInt(t.pop());
+                    h2 = parseInt(t.pop()); 
+                    h = Math.abs(h1-h2);
+                    m = Math.abs(m1-m2);
+                    s = Math.abs(s1-s2);
+                    console.log(h1,":",m1,":",s1,"  ",h2,":",m2,":",s2,"  ",h,":",m,":",s);
+                    
+                    if((h==0 && m==0) || (h==0 && m==1 && s<60) || (h==1 && m<60)){
+                        console.log(value); 
+                    }
+                    else{
+                        map.delete(key);
+                    }
+                }
+                var fff = 0;
+                function calMean(value, key, map){
+                    fff += parseInt(key);
                 }
     
             </script>
         
     </head>
     <body>
-            <p id="demo"></p>
-            <table class="table table-striped" id="myTable">
-                    <thead class="grey">
-                        <tr>
-                        <th scope="col">قیمت</th>
-                        <th scope="col">زمان</th>
-                        <th scope="col">ردیف</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    </table>
-                      
-        </body>
+        <p id="demo">میانگین ۱ دقیقه آخر: </p>
+        <p id="mean"></p>
+
+        <table class="table table-striped" id="myTable">
+            <thead class="grey">
+                <tr>
+                <th scope="col">قیمت</th>
+                <th scope="col">زمان</th>
+                <th scope="col">ردیف</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>    
+    </body>
 
 </html>
+<!-- // alert(sum);
+// var sum = 0;
+// for(var i=1 ;i< $('#myTable tr').length ;i++){
+//     var t = myTable.rows[i].cells[0].innerHTML.substring(0, myTable.rows[i].cells[0].innerHTML.length - 1);
+//     sum += parseInt(t);
+// }
+// document.getElementById("mean").innerHTML = sum / ; -->
