@@ -5,8 +5,6 @@
         <style>
         </style>
             <script >
-                var dict = {};
-
                 var pushSocket = new WebSocket("ws://localhost:8080")
                 var newData;
                 pushSocket.onmessage = function (event) {
@@ -30,10 +28,9 @@
                 //alert("Socket Closed by Server");
                 };
                 var d = new Date();
-                var rowCounter = 0;
+                var rowCounter = 0, sum = 0;
                 let map = new Map();
                 var h,m,s,h1,m1,s1,h2,m2,s2;
-                var sum = 0;
 
                 function dollarAdd() {
                     rowCounter +=1;
